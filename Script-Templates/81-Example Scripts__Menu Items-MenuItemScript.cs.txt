@@ -1,0 +1,127 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEditor;
+
+[HelpURL("https://unity3d.com/learn/tutorials/topics/interface-essentials/unity-editor-extensions-menu-items")]
+public class #SCRIPTNAME# : MonoBehaviour 
+{
+	// Creates a menu item for the top level toolbar
+	// Possible to nest under existing menu
+	// Use backslashes to nest menus
+	[MenuItem("ExampleMenu/SomeFunction")] 
+	private static void SomeFunction()
+	{
+		print("This is a function that does something. OMG");
+	}
+	
+	// Assign hotkeys to commony used menu items
+	// % – CTRL on Windows / CMD on OSX
+	// # – Shift
+	//& – Alt
+	// LEFT/RIGHT/UP/DOWN – Arrow keys
+	// F1…F2 – F keys
+	// HOME, END, PGUP, PGDN
+	// Character keys not part of a key-sequence are added by adding an underscore prefix to them (e.g: _g for shortcut key “G”).
+	// Hotkey character combinations are added to the end of the menu item path, preceded by a space
+	[MenuItem("ExampleMenu/SomeFunction2 %#F1")] 
+	private static void SomeFunction2()
+	{
+		print("This function also has a hotkey! It is so hot.");
+	}
+	
+	// Add a new menu item that is accessed by right-clicking on an asset in the project view
+	[MenuItem("Assets/SomeFunction3")]
+	private static void LoadAdditiveScene()
+	{
+		print("Hi! I'm somefunction3!");
+	}
+	 
+	// Adding a new menu item under Assets/Create
+	[MenuItem("Assets/Create/SomeFunction4")]
+	private static void AddConfig()
+	{
+		print("DoSomething4()");
+	}
+	 
+
+	
+	// Some menu items only make sense in a given context
+	// The validation method should have the same menu path as the menu it is validating, and should return a boolean value to determine whether the menu item is active or not.
+	[MenuItem("Assets/DoSomethingWithThisScriptOnly")]
+	private static void DoSomethingWithScript()
+	{
+		print("Notice how this option is only available on #SCRIPTNAME#");
+	}
+	 
+	// Note that we pass the same path, and also pass "true" to the second argument.
+	[MenuItem("Assets/DoSomethingWithThisScriptOnly", true)]
+	private static bool NewMenuOptionValidation()
+	{
+        var t = Selection.activeObject as MonoScript;
+        if (t)
+            return t.GetClass() == typeof(#SCRIPTNAME#);
+        else
+            return false;
+	}
+	
+	//Priority is a number that can be assigned to a menu item that controls the ordering of menu items under the root menu.
+	// Automatically groupes the menu items according to their assigned priority in increments of 50
+	[MenuItem("ExampleMenu/Option1", false, 1)]
+	private static void NewMenuOption()
+	{
+	}
+	 
+	[MenuItem("ExampleMenu/Option2", false, 2)]
+	private static void NewMenuOption2()
+	{
+	}
+	 
+	[MenuItem("ExampleMenu/Option3", false, 3)]
+	private static void NewMenuOption3()
+	{
+	}
+	 
+	[MenuItem("ExampleMenu/Option4", false, 51)]
+	private static void NewMenuOption4()
+	{
+	}
+	 
+	[MenuItem("ExampleMenu/Option5", false, 52)]
+	private static void NewMenuOption5()
+	{
+	}
+	
+	
+	// CONTEXT MENUS!
+	// CONTEXT/ComponentName – items will be available by right-clicking inside the inspector of the given component.
+	// Example: Add a new menu item that is accessed by right-clicking inside the RigidBody component
+	[MenuItem("CONTEXT/Rigidbody/New Example Option")]
+	private static void NewOptionForRigidBody()
+	{
+		print("new options for rigidbodies!");
+	}
+	
+	// To get a reference to the cotextual component use menucommand
+	[MenuItem("CONTEXT/Rigidbody/New Example Contextual Option")]
+	private static void NewOptionForRigidBody2(MenuCommand menuCommand)
+	{
+		// The RigidBody component can be extracted from the menu command using the context field.
+		var rigid = menuCommand.context as Rigidbody;
+		print("You are messing with:" + rigid.gameObject.name);
+	}
+	
+	// Defining a contex menu for this component only
+	[ContextMenu("Another Option")]
+    private static void BoringName7000()
+    {
+    }
+	
+	// Defining a context menu for a field in the inspector
+	[ContextMenuItem("Randomize Number", "Randomize")]
+    public int index;
+    private void Randomize()
+    {
+        index = UnityEngine.Random.Range(0,100);
+    }
+}

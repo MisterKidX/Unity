@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -8,6 +8,7 @@ public class ObjectPool : MonoBehaviour
     #region Fields & Properties
 
     public bool initializeOnAwake = true;
+    public bool toGrow = true;
     public int growFactor = 2;
     public int initialPoolSize = 20;
     [Tooltip("Optional. Otherwise will automaticaly attach to the pooler.")]
@@ -62,7 +63,11 @@ public class ObjectPool : MonoBehaviour
 
     private void Grow()
     {
-        Initialize(_queue.Count * growFactor - _queue.Count);
+        if (toGrow)
+            Initialize(_queue.Count * growFactor - _queue.Count);
+        
+        // See this? this goes through the entire queue just to find the new objects. It is pure shit.
+        // This is why this script needs to change to two generic stacks. It'll be highly efficient.
         for (int i = 0; i < _queue.Count; i++)
         {
             if ((_queue.Peek() as GameObject).activeSelf)
@@ -76,7 +81,11 @@ public class ObjectPool : MonoBehaviour
     {
         try
         {
-            var obj = _queue.Dequeue() as GameObject;
+            var obj = _queue.Peek() as GameObject;
+            if (obj.activeSelf)
+                Grow();
+
+            obj = _queue.Dequeue() as GameObject;
             _queue.Enqueue(obj);
 
             if (obj.activeSelf)
@@ -104,16 +113,31 @@ public class ObjectPool : MonoBehaviour
 #if UNITY_EDITOR
 
     [Header("DEBUG")]
+    public bool createObjectsAtInterval = false;
+    public float interval = 1;
+
     private float timer = 0f;
+    Camera _mainCam;
+    Vector3 _mainCamPose;
+
+    private void Start()
+    {
+        _mainCam = Camera.main;
+        _mainCamPose = Camera.main.transform.position;
+    }
 
     private void Update()
     {
-        timer += Time.deltaTime;
-
-        if (timer > 1)
+        if (createObjectsAtInterval)
         {
-            timer = 0;
-            Pull();
+            timer += Time.deltaTime;
+
+            if (timer > interval)
+            {
+                timer = 0;
+                Pull().transform.position = new Vector3(Random.Range(_mainCamPose.x - _mainCam.orthographicSize * _mainCam.aspect, _mainCamPose.x + _mainCam.orthographicSize * _mainCam.aspect),
+                    Random.Range(_mainCamPose.y - _mainCam.orthographicSize * _mainCam.aspect, _mainCamPose.y + _mainCam.orthographicSize * _mainCam.aspect),0);
+            }
         }
     }
 

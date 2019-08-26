@@ -6,17 +6,14 @@ using Google.Apis.Util.Store;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Data;
 using UnityEngine;
 using Object = System.Object;
 
 namespace GoogleServices
 {
-    class GoogleSheetsService : MonoBehaviour
+    public class GoogleSheetsService : MonoBehaviour
     {
 
         public string applicationName = "Unity Project";
@@ -27,39 +24,12 @@ namespace GoogleServices
         private string[] _scopes = { SheetsService.Scope.Spreadsheets };
         private StringBuilder _sb = new StringBuilder();
 
+        [SerializeField] [HideInInspector]
+        private string credentials = "credentials.json";
+
         private void Awake()
         {
             _service = AuthorizeGoogleApp();
-        }
-
-        private SheetsService AuthorizeGoogleApp()
-        {
-            UserCredential credential;
-
-            using (var stream =
-                new FileStream("credentials.json", FileMode.Open, FileAccess.Read))
-            {
-                string credPath = Environment.GetFolderPath(
-                    Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/sheets.googleapis.com-dotnet.json");
-
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    GoogleClientSecrets.Load(stream).Secrets,
-                    _scopes,
-                    "user",
-                    CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                print("Credential file saved to: " + credPath);
-            }
-
-            // Create Google Sheets API service.
-            var service = new SheetsService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = applicationName,
-            });
-
-            return service;
         }
 
         /// <summary>
@@ -124,6 +94,36 @@ namespace GoogleServices
    _service.Spreadsheets.Values.Update(new ValueRange() { Values = values }, spreadsheetId, startCell);
             request.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.USERENTERED;
             var response = request.Execute();
+        }
+
+        private SheetsService AuthorizeGoogleApp()
+        {
+            UserCredential credential;
+
+            using (var stream =
+                new FileStream(credentials, FileMode.Open, FileAccess.Read))
+            {
+                string credPath = Environment.GetFolderPath(
+                    Environment.SpecialFolder.Personal);
+                credPath = Path.Combine(credPath, ".credentials/sheets.googleapis.com-dotnet.json");
+
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream).Secrets,
+                    _scopes,
+                    "user",
+                    CancellationToken.None,
+                    new FileDataStore(credPath, true)).Result;
+                print("Credential file saved to: " + credPath);
+            }
+
+            // Create Google Sheets API service.
+            var service = new SheetsService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = applicationName,
+            });
+
+            return service;
         }
 
         private string FullPath(string cellRange)

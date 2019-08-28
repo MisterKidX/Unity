@@ -65,7 +65,7 @@ namespace GoogleServices
         _service.Spreadsheets.Values.Get(spreadsheetId, cell);
 
             ValueRange response = request.Execute();
-            return response?.Values[0][0];
+            return response?.Values?[0][0];
         }
 
         /// <summary>

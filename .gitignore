@@ -39,3 +39,6 @@ sysinfo.txt
 *cred.json
 *credentials.json
 *.TokenResponse-user
+
+# Word Documents
+*~$

@@ -129,6 +129,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1365047941}
+  - component: {fileID: 1365047942}
+  - component: {fileID: 1365047943}
   m_Layer: 0
   m_Name: GoogleSheetsService
   m_TagString: Untagged
@@ -150,3 +152,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1365047942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365047940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4dd937010a3973c4b9bc1a897444a489, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  applicationName: Unity Example Project
+  spreadsheetId: 1mqWbcEp29vkSOVxh7w2gthWR-CjDSQntWVtovM3rXUY
+  activeSheet: Sheet01
+  credentials: D:/GitHub/GitHub Unity/Assets/Google Sheets/Resources/credentials.json
+  tokenResponse: TokenResponse-user
+--- !u!114 &1365047943
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1365047940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a67cf370a80420b44a348bbf8908ceb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  service: {fileID: 1365047942}

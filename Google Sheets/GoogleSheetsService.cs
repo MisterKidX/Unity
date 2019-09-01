@@ -10,6 +10,10 @@ using System.Text;
 using System.Threading;
 using UnityEngine;
 using Object = System.Object;
+using System.Linq;
+#if UNITY_ANDROID
+using UnityEngine.Android;
+#endif
 
 namespace GoogleServices
 {
@@ -26,6 +30,9 @@ namespace GoogleServices
 
         [SerializeField] [HideInInspector]
         private string credentials = "credentials.json";
+        [SerializeField]
+        [HideInInspector]
+        private string tokenResponse = "TokenResponse-user";
 
         private void Awake()
         {
@@ -100,21 +107,85 @@ namespace GoogleServices
         {
             UserCredential credential;
 
-            using (var stream =
-                new FileStream(credentials, FileMode.Open, FileAccess.Read))
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+            if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageRead))
             {
-                string credPath = Environment.GetFolderPath(
-                    Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/sheets.googleapis.com-dotnet.json");
+                Permission.RequestUserPermission(Permission.ExternalStorageRead);
+            }
+            if (Permission.HasUserAuthorizedPermission(Permission.ExternalStorageWrite))
+            {
+                Permission.RequestUserPermission(Permission.ExternalStorageWrite);
+            }
+            var credFileName = Path.GetFileNameWithoutExtension(credentials);
+            var tokenFileName = Path.GetFileNameWithoutExtension(tokenResponse);
+
+            var objCred = Resources.Load<TextAsset>(credFileName);
+            // The file must be saved as json or unity can't load it   
+            var verf = Resources.Load<TextAsset>(tokenFileName);
+
+            var partPath = Path.Combine(Application.persistentDataPath, "credentials");
+            var pathCred = Path.Combine(partPath, "credentials.json");
+            var pathVerf = Path.Combine(partPath, "Google.Apis.Auth.OAuth2.Responses.TokenResponse-user");
+
+            if (!Directory.Exists(partPath))
+            {
+                Directory.CreateDirectory(partPath);
+            }
+
+            if (File.Exists(pathCred) && File.Exists(pathVerf))
+            {
+                credentials = pathCred;
+                print(Application.persistentDataPath);
+            }
+            // We are doing this because authorizing thorigh web causes unexpected bugs on android
+            else
+            {
+                File.WriteAllText(pathCred, objCred.text);
+                File.WriteAllText(pathVerf, verf.text);
+
+                credentials = pathCred;
+            }
+
+            using (var stream = new StreamReader(credentials))
+            {
+
+                var credPath = Path.Combine(Application.persistentDataPath, "credentials");
+                FileDataStore store = new FileDataStore(credPath, true);
+
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                    GoogleClientSecrets.Load(stream.BaseStream).Secrets,
+                    _scopes,
+                    "user",
+                    CancellationToken.None,
+                    store).Result;
+            }
+
+#else
+            using (var stream = new FileStream(credentials, FileMode.Open, FileAccess.Read))
+            {
+                string credPath = Path.Combine(Application.dataPath, "Google Sheets", "Resources");
+                var store = new FileDataStore(credPath, true);
 
                 credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     GoogleClientSecrets.Load(stream).Secrets,
                     _scopes,
                     "user",
                     CancellationToken.None,
-                    new FileDataStore(credPath, true)).Result;
-                print("Credential file saved to: " + credPath);
+                    store).Result;
+
+                var f = Directory.GetFiles(credPath).Where(fi => fi.Contains("Google.Apis")).ToArray()[0];
+                var tokenPath = Path.Combine(Application.dataPath, "Google Sheets", "Resources",
+                    "TokenResponse.json");
+
+                if (!File.Exists(tokenPath))
+                {
+                    File.Move(f, tokenPath);
+                }
+
+                print("Credential file saved to: " + tokenPath);
             }
+#endif
 
             // Create Google Sheets API service.
             var service = new SheetsService(new BaseClientService.Initializer()

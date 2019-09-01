@@ -34,3 +34,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+
+# Google Services
+*cred.json
+*credentials.json
+*.TokenResponse-user

@@ -1,4 +1,5 @@
-
+using System;
+using UnityEngine;
 public static class Direction
 {
     // Directions as degrees

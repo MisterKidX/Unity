@@ -2,6 +2,7 @@
 
 using UnityEngine;
 
+[HelpURL("https://easings.net")]
 [CreateAssetMenu(fileName = "NewCurve", menuName = "Curve")]
 public class Curve : ScriptableObject
 {

@@ -30,7 +30,7 @@ public class KeywordReplaceInspector : Editor
         foreach (var kdata in t.keywords)
         {
             var s = format.Replace("KEYWORD", kdata.keyword.ToUpper());
-            s = format.Replace("COMMAND", kdata.command);
+            s = s.Replace("COMMAND", kdata.command);
             keywords.Add(s);
         }
         StringBuilder sb = new StringBuilder();
@@ -46,9 +46,10 @@ public class KeywordReplacer : UnityEditor.AssetModificationProcessor
         if (file != "".cs"" && file != "".js"" && file != "".boo"") return;
         index = Application.dataPath.LastIndexOf(""Assets"");
         path = Application.dataPath.Substring(0, index) + path;
-        file = System.IO.File.ReadAllText(path);");
+        file = System.IO.File.ReadAllText(path);
+        // This is where you can insert your custom keywords
+        ");
 
-        sb.AppendLine();
         foreach (var item in keywords)
         {
             sb.AppendLine("\t\t" + item);

@@ -29,7 +29,7 @@ public class KeywordReplaceInspector : Editor
 
         foreach (var kdata in t.keywords)
         {
-            var s = format.Replace("KEYWORD", kdata.keyword);
+            var s = format.Replace("KEYWORD", kdata.keyword.ToUpper());
             s = format.Replace("COMMAND", kdata.command);
             keywords.Add(s);
         }

@@ -15,7 +15,5 @@ MonoBehaviour:
   keywords:
   - keyword: CREATIONDATE
     command: System.DateTime.Now
-  - keyword: 
-    command: 
-  - keyword: 
-    command: 
+  - keyword: company
+    command: PlayerSettings.companyName

@@ -1,0 +1,48 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class #SCRIPTNAME# : MonoBehaviour
+{
+    #region Interface
+	
+	#NOTRIM#
+	
+	#endregion
+	
+	#region Implementation
+	
+	#NOTRIM#
+	
+	#endregion
+	
+	#region Callbacks
+	
+	#NOTRIM#
+	
+	#endregion
+	
+	#region Publishers
+	
+	#NOTRIM#
+	
+	#endregion
+	
+	#region Handlers
+	
+	#NOTRIM#
+	
+	#endregion
+	
+	#region Subscribers
+	
+	#NOTRIM#
+	
+	#endregion
+}
+
+#region Helper Classes
+	
+	#NOTRIM#
+	
+#endregion

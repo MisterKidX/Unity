@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-// https://unity.com/how-to/architect-game-code-scriptable-objects
 namespace Utilities.Events
 {
     public class EventListener : MonoBehaviour

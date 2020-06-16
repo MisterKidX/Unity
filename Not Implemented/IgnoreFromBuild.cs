@@ -1,4 +1,3 @@
-﻿#if UNITY_EDITOR
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,26 +10,32 @@ using UnityEngine.SceneManagement;
 
 namespace Utilities
 {
-    public class IgnoreFromBuild : MonoBehaviour, IPreprocessBuildWithReport
+    public class IgnoreFromBuild : IPreprocessBuildWithReport, IPostprocessBuildWithReport
     {
-        public bool keepIfDevelopmentBuild = true;
-
+        public static Dictionary<GameObject, string> goOriginTags = new Dictionary<GameObject, string>();
         public int callbackOrder { get { return 0; } }
+
+        public void OnPostprocessBuild(BuildReport report)
+        {
+            foreach (var kvp in goOriginTags)
+            {
+                kvp.Key.tag = goOriginTags[kvp.Key];
+            }
+        }
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            var ignores = GameObject.FindObjectsOfType<IgnoreFromBuild>();
+            goOriginTags.Clear();
+            var gos = GameObject.FindGameObjectsWithTag("DevelopmentOnly");
 
-            foreach (var ignore in ignores)
+            foreach (var go in gos)
             {
-                if (ignore.keepIfDevelopmentBuild && (report.summary.options & BuildOptions.Development) != 0) { }
-                else
-                    ignore.tag = "EditorOnly";
+                goOriginTags.Add(go, go.tag);
 
+                if ((report.summary.options & BuildOptions.Development) != 0) { }
+                else
+                    go.tag = "EditorOnly";
             }
         }
     }
 }
-#endif
-
-

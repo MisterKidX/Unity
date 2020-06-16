@@ -1,12 +1,9 @@
-using System;
-using System.Collections;
+#if UNITY_EDITOR
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
-using UnityEditor.Callbacks;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Utilities
 {
@@ -39,3 +36,4 @@ namespace Utilities
         }
     }
 }
+#endif

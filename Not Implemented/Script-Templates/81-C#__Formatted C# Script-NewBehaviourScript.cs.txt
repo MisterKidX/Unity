@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public namespace UseNamespaces
+namespace UseNamespaces
 {
     public class #SCRIPTNAME# : MonoBehaviour
     {

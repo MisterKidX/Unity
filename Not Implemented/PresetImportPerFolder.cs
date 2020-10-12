@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using UnityEditor;
-using UnityEngine;
 using UnityEditor.Presets;
+using UnityEngine;
 
 [HelpURL("https://docs.unity3d.com/Manual/DefaultPresetsByFolder.html")]
 public class PresetImportPerFolder : AssetPostprocessor

@@ -1,0 +1,26 @@
+// --- #PROJECTNAME# ---
+// #WRITERFULLNAME#(#EMAIL#)
+// #DATE#
+// ----------------------
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public namespace UseNamespaces
+{
+    public class #SCRIPTNAME# : MonoBehaviour
+    {
+        #region Serialized
+        #endregion
+
+        #region State
+        #endregion
+
+        #region CI
+        #endregion
+
+        #region IL
+        #endregion
+    }
+}

@@ -15,6 +15,10 @@ public class PresetImportPerFolder : AssetPostprocessor
             var path = Path.GetDirectoryName(assetPath);
             while (!string.IsNullOrEmpty(path))
             {
+                if (path.Contains("ProjectSettings") || path.Contains("Library"))
+                {
+                    return;
+                }
                 // Find all Preset assets in this folder.
                 var presetGuids = AssetDatabase.FindAssets("t:Preset", new[] { path });
                 foreach (var presetGuid in presetGuids)

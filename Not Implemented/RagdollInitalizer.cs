@@ -6,6 +6,7 @@ using System;
 using Sirenix.OdinInspector;
 using System.Reflection;
 
+// Created by Dor Ben Dor, agesonera@gmail.com
 public class RagdollInitalizer : MonoBehaviour
 {
     [MenuItem("CONTEXT/Animator/Create Ragdoll")]
